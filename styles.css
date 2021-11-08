@@ -1,0 +1,31 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.bg {
+    background: lightpink;
+    border: 2px solid red;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.display {
+    flex: 1;
+    width: 100vw;
+    border: 2px solid purple;
+}
+
+.playerChoices {
+    border: 2px solid blue;
+    flex: 1;
+    width: 100vw;
+    height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
