@@ -1,9 +1,6 @@
 let computerMove = [];
-let scoring = { cpuScore : 0, playerScore : 0, totalRounds = 0 };
+let scoring = { cpuScore : 0, playerScore : 0, totalRounds : 0 };
 let roundLength = 5;
-
-
-
 
 
 function cpuMove() { 
@@ -22,27 +19,35 @@ function cpuMove() {
 
 function rockPaperScissors(playerInput) {
     if (playerInput == undefined) return;
-    console.log({playerInput});
 
     cpuMove(); 
+    let displayMessage = '';
 
     if (playerInput == computerMove) {
+        displayMessage = playerInput + " against " + computerMove + ". It's a tie!";
+        updateDisplayAnnouncements(displayMessage);
+        addToMatchHistory(displayMessage);
         console.log(playerInput + " against " + computerMove + ". It's a tie!");
+        return;
     } else if (playerInput == 'Rock' && computerMove == 'Paper') {
-        ++scoring.totalRounds;
-        console.log(playerInput + ' loses to ' + computerMove);
+        displayMessage = playerInput + ' loses to ' + computerMove;
+        updateDisplayAnnouncements(displayMessage);
+        addToMatchHistory(displayMessage);
         return score('cpu')
     } else if (playerInput == 'Paper' && computerMove == 'Scissors') {
-        ++scoring.totalRounds;
-        console.log(playerInput + ' loses to ' + computerMove);
+        displayMessage = playerInput + ' loses to ' + computerMove;
+        updateDisplayAnnouncements(displayMessage);
+        addToMatchHistory(displayMessage);
         return score('cpu');
     } else if (playerInput == 'Scissors' && computerMove == 'Rock') {
-        ++scoring.totalRounds;
-        console.log(playerInput + ' loses to ' + computerMove);
+        displayMessage = playerInput + ' loses to ' + computerMove;
+        updateDisplayAnnouncements(displayMessage);
+        addToMatchHistory(displayMessage);
         return score('cpu');
     } else {
-        ++scoring.totalRounds;
-        console.log(playerInput + ' beats ' + computerMove + '. You win!');
+        displayMessage = playerInput + ' beats ' + computerMove + '. You win!';
+        updateDisplayAnnouncements(displayMessage);
+        addToMatchHistory(displayMessage);
         return score('player');
     }
 }
@@ -68,12 +73,22 @@ function score(winner) {
         console.table({ scoring });
     }
 
-    if ((scoring.cpuScore + scoring.playerScore >= roundLength)) {
-        console.log('game over');
+    let message = '';
+
+    updateDisplayScores();
+    if (scoring.cpuScore >= Math.ceil((roundLength / 2)) && scoring.cpuScore > scoring.playerScore) {
+        message = 'Game over. CPU wins ' + scoring.cpuScore + ' to ' +scoring.playerScore
+        updateDisplayAnnouncements(message);
+        addToMatchHistory(message);
         resetScore();
         gameStart();
-    }
-
+    } else if (scoring.playerScore >= Math.ceil((roundLength / 2)) && scoring.cpuScore < scoring.playerScore){
+        message = 'Game over. You win ' + scoring.playerScore + ' to ' +scoring.cpuScore
+        updateDisplayAnnouncements(message);
+        addToMatchHistory(message);
+        resetScore();
+        gameStart();
+    } return;
 }
 
 function resetScore() {
@@ -85,22 +100,42 @@ gameStart();
 
 
 const rockInput = document.querySelector('.rock');
-let rockPushCount = 0;
 rockInput.addEventListener('click', () => {
-    rockInput.textContent = 'Rock ' + ++rockPushCount;
     rockPaperScissors('Rock');
+    updateDisplayScores();
 });
 
 const paperInput = document.querySelector('.paper');
-let paperPushCount = 0;
 paperInput.addEventListener('click', () => {
-    paperInput.textContent = 'Paper ' + ++paperPushCount;
     rockPaperScissors('Paper');
+    updateDisplayScores();
 });
 
 const scissorsInput = document.querySelector('.scissors');
-let scissorsPushCount = 0;
 scissorsInput.addEventListener('click', () => {
-    scissorsInput.textContent = 'Scissors ' + ++scissorsPushCount;
     rockPaperScissors('Scissors');
+    updateDisplayScores();
 });
+
+const display = document.querySelector('.display');
+
+const displayScores = document.querySelector('.displayScores');
+function updateDisplayScores() {
+    displayScores.textContent = 'Player: ' + scoring.playerScore + ' vs ' + 'CPU: ' + scoring.cpuScore;
+}
+
+const displayAnnouncements = document.querySelector('.displayAnnouncements')
+function updateDisplayAnnouncements(string) {
+    displayAnnouncements.textContent = string;
+}
+
+const matchHistory = document.querySelector('.matchHistory');
+
+function addToMatchHistory(message) {
+    const div = document.createElement('div');
+    div.classList.add('matchHistory');
+    div.classList.add('results');
+    div.textContent = message;
+    matchHistory.append(div);
+}
+
